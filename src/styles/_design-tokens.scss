@@ -1,0 +1,62 @@
+:root {
+  // Named after how the color looks, so the palette is easy to visualize.
+  --color-deep-forest-green: #19332d;
+  --color-evergreen: #315e4d;
+  --color-eucalyptus-mist: #bdd0c4;
+  --color-snow-white: #fbfcfa;
+  --color-morning-fog: #f0f3ed;
+  --color-pale-sage: #f3f5f1;
+  --color-pure-white: #fff;
+  --color-soft-ivory: #f4f5f0;
+  --color-burnished-gold: #d9a249;
+  --color-leaf-green: #26735a;
+  --color-terracotta-red: #b45e47;
+  --color-weathered-sage: #6c8178;
+
+  // Semantic aliases keep component rules expressive while pointing to the visual palette.
+  --color-ink: var(--color-deep-forest-green);
+  --color-brand: var(--color-evergreen);
+  --color-brand-muted: var(--color-eucalyptus-mist);
+  --color-canvas: var(--color-snow-white);
+  --color-surface: var(--color-morning-fog);
+  --color-field: var(--color-pale-sage);
+  --color-white: var(--color-pure-white);
+  --color-cream: var(--color-soft-ivory);
+  --color-accent: var(--color-burnished-gold);
+  --color-positive: var(--color-leaf-green);
+  --color-negative: var(--color-terracotta-red);
+  --color-text-muted: var(--color-weathered-sage);
+  --color-text-subtle: #61726b;
+  --color-text-faint: #75867e;
+  --color-text-light: #91a89d;
+  --color-text-lighter: #718078;
+  --color-text-placeholder: #809087;
+  --color-text-entry: #829188;
+  --color-text-footer: #839188;
+  --color-border: #dce4dc;
+  --color-border-soft: #dfe6df;
+  --color-border-control: #cdd9d1;
+  --color-border-field: #dbe4dc;
+  --color-border-dashboard: #dae2da;
+  --color-border-button: #bdccc1;
+  --color-button-text: #253c33;
+  --radius-small: 7px;
+  --radius-control: 9px;
+  --radius-field: 10px;
+  --radius-card: 19px;
+  --font-display: Georgia, serif;
+
+  // Spacing scale: use these for all layout padding, margins, and gaps.
+  --space-hairline: 4px;
+  --space-tight: 8px;
+  --space-compact: 12px;
+  --space-regular: 16px;
+  --space-comfortable: 20px;
+  --space-spacious: 24px;
+  --space-roomy: 28px;
+  --space-generous: 32px;
+  --space-extra-generous: 40px;
+  --space-section: 48px;
+  --space-feature: 56px;
+  --space-hero: 64px;
+}

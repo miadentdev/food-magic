@@ -1,18 +1,14 @@
 <main>
   <header>
-    <div class="brand"><span class="mark">w</span><span>weightwise</span></div>
+    <div class="brand"><span class="mark" aria-hidden="true"></span><span>OnTrack</span></div>
     @if (installPrompt()) {
       <button class="install" (click)="install()">Install app</button>
     }
   </header>
-  <section class="intro">
-    <p class="eyebrow">YOUR DAILY CHECK-IN</p>
-    <p class="subhead">Private, simple tracking that stays on your device.</p>
-  </section>
   <section class="dashboard">
     <article class="summary">
       <span class="label">CURRENT WEIGHT</span>
-      @if (latest(); as entry) {
+      @if (latestEntry(); as entry) {
         <div class="big-number">{{ entry.weight | number: '1.0-1' }} <small>kg</small></div>
         <p>Last updated {{ formatDate(entry.date).toLowerCase() }}</p>
       } @else {
@@ -22,9 +18,9 @@
     </article>
     <article class="metric">
       <span class="label">LAST CHANGE</span>
-      @if (change() !== null) {
-        <strong [class.down]="change()! < 0" [class.up]="change()! > 0"
-          >{{ change()! > 0 ? '+' : '' }}{{ change() | number: '1.0-1' }} kg</strong
+      @if (weightChange() !== null) {
+        <strong [class.down]="weightChange()! < 0" [class.up]="weightChange()! > 0"
+          >{{ weightChange()! > 0 ? '+' : '' }}{{ weightChange() | number: '1.0-1' }} kg</strong
         >
       } @else {
         <strong>—</strong>
@@ -33,7 +29,7 @@
     </article>
     <article class="metric">
       <span class="label">YOUR RANGE</span>
-      @if (range(); as values) {
+      @if (weightRange(); as values) {
         <strong>{{ values.low | number: '1.0-1' }}–{{ values.high | number: '1.0-1' }}</strong>
       } @else {
         <strong>—</strong>
@@ -55,38 +51,43 @@
             max="500"
             step="0.1"
             placeholder="00.0"
-            [ngModel]="weight()"
-            (ngModelChange)="weight.set($event)"
+            [ngModel]="enteredWeight()"
+            (ngModelChange)="enteredWeight.set($event)"
           /><span>kg</span></label
         ><label class="date-field"
           ><span>Date</span
-          ><input type="date" [ngModel]="date()" (ngModelChange)="date.set($event)"
+          ><input lang="en-US" type="date" [ngModel]="entryDate()" (ngModelChange)="entryDate.set($event)"
         /></label>
       </div>
       <input
         class="note"
         maxlength="100"
         placeholder="A note, if you like…"
-        [ngModel]="note()"
-        (ngModelChange)="note.set($event)"
-      /><button class="save" [disabled]="!weight() || isSaving()" (click)="save()">
+        [ngModel]="entryNote()"
+        (ngModelChange)="entryNote.set($event)"
+      /><button class="save" [disabled]="!enteredWeight() || isSaving()" (click)="save()">
         {{ isSaving() ? 'Saving…' : 'Save check-in' }} <span>→</span>
       </button>
     </article>
     <article class="chart card">
       <div class="chart-heading">
         <div>
-          <span class="eyebrow">RECENT TREND</span>
+          <span class="eyebrow">WEIGHT TREND</span>
           <h2>Your rhythm</h2>
         </div>
-        <span class="entries-count">{{ entries().length }} entries</span>
+        <span class="entries-count">{{ trendEntries().length }} entries</span>
+      </div>
+      <div class="trend-range-selector" aria-label="Trend time range">
+        @for (trendRange of trendRanges; track trendRange.value) {
+          <button [class.active]="selectedTrendRange() === trendRange.value" (click)="selectTrendRange(trendRange.value)">{{ trendRange.label }}</button>
+        }
       </div>
       @if (chartPoints()) {
         <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="Weight trend chart">
           <polyline [attr.points]="chartPoints()"></polyline>
         </svg>
       } @else {
-        <div class="chart-empty">Add at least two entries to see your trend.</div>
+        <div class="chart-empty">Add at least two entries in this period to see your trend.</div>
       }
     </article>
   </section>
@@ -96,11 +97,11 @@
         <span class="eyebrow">YOUR HISTORY</span>
         <h2>Every check-in counts.</h2>
       </div>
-      <span>{{ entries().length }} total</span>
+      <span>{{ weightEntries().length }} total</span>
     </div>
-    @if (entries().length) {
+    @if (weightEntries().length) {
       <div class="entries">
-        @for (entry of entries(); track entry.id) {
+        @for (entry of weightEntries(); track entry.id) {
           <article class="entry">
             <div class="date">
               <b>{{ formatDate(entry.date) }}</b
@@ -115,5 +116,20 @@
       <div class="empty">No entries yet. Your journey begins with one small check-in.</div>
     }
   </section>
-  <footer><span>◉</span> Your data lives only on this device.</footer>
+  <div class="data-tools">
+    <div>
+      <b>Keep a copy of your progress</b
+      ><span>Export a JSON backup or import one from OnTrack.</span>
+    </div>
+    <div>
+      <button class="data-button" (click)="exportData()">Export data</button
+      ><label class="data-button import"
+        >Import data<input
+          type="file"
+          accept="application/json,.json"
+          (change)="importData($event)"
+      /></label>
+    </div>
+  </div>
+  <footer><span>◉</span> Your data lives only on this device. · v1.0.0</footer>
 </main>

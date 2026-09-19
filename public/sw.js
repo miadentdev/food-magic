@@ -1,1 +1,34 @@
-const CACHE='weightwise-v1',SHELL=['/','/index.html','/manifest.webmanifest','/icon.svg'];self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting())));self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(caches.match(e.request).then(c=>c||fetch(e.request).then(r=>{if(new URL(e.request.url).origin===location.origin)caches.open(CACHE).then(x=>x.put(e.request,r.clone()));return r}).catch(()=>caches.match('/index.html'))))});
+const cacheName = 'ontrack-v1.0.0';
+const applicationShellFiles = ['/', '/index.html', '/manifest.webmanifest', '/icon.svg'];
+
+self.addEventListener('install', (installEvent) => {
+  installEvent.waitUntil(
+    caches.open(cacheName).then((applicationCache) =>
+      applicationCache.addAll(applicationShellFiles),
+    ).then(() => self.skipWaiting()),
+  );
+});
+
+self.addEventListener('activate', (activateEvent) => {
+  activateEvent.waitUntil(self.clients.claim());
+});
+
+self.addEventListener('fetch', (fetchEvent) => {
+  if (fetchEvent.request.method !== 'GET') return;
+
+  fetchEvent.respondWith(
+    caches.match(fetchEvent.request).then((cachedResponse) => {
+      if (cachedResponse) return cachedResponse;
+      return fetch(fetchEvent.request)
+        .then((networkResponse) => {
+          if (new URL(fetchEvent.request.url).origin === location.origin) {
+            caches.open(cacheName).then((applicationCache) =>
+              applicationCache.put(fetchEvent.request, networkResponse.clone()),
+            );
+          }
+          return networkResponse;
+        })
+        .catch(() => caches.match('/index.html'));
+    }),
+  );
+});

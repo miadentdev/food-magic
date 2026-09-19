@@ -14,10 +14,10 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render the weight tracker heading', async () => {
+  it('should render the weight tracker dashboard', async () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('A lighter way');
+    expect(compiled.querySelector('.dashboard')).toBeTruthy();
   });
 });
