@@ -1,5 +1,115 @@
-<main><header><div class="brand"><span class="mark">w</span><span>weightwise</span></div>@if (installPrompt()) { <button class="install" (click)="install()">Install app</button> }</header>
-<section class="intro"><p class="eyebrow">YOUR DAILY CHECK-IN</p><h1>A lighter way to<br>see your progress.</h1><p class="subhead">Private, simple tracking that stays on your device.</p></section>
-<section class="dashboard"><article class="summary"><span class="label">CURRENT WEIGHT</span>@if (latest(); as entry) { <div class="big-number">{{ entry.weight | number:'1.0-1' }} <small>kg</small></div><p>Last updated {{ formatDate(entry.date).toLowerCase() }}</p> } @else { <div class="big-number muted">— <small>kg</small></div><p>Your first check-in starts here.</p> }</article><article class="metric"><span class="label">LAST CHANGE</span>@if (change() !== null) { <strong [class.down]="change()! < 0" [class.up]="change()! > 0">{{ change()! > 0 ? '+' : '' }}{{ change() | number:'1.0-1' }} kg</strong> } @else { <strong>—</strong> }<p>since previous entry</p></article><article class="metric"><span class="label">YOUR RANGE</span>@if (range(); as values) { <strong>{{ values.low | number:'1.0-1' }}–{{ values.high | number:'1.0-1' }}</strong> } @else { <strong>—</strong> }<p>all recorded weights</p></article></section>
-<section class="content-grid"><article class="checkin card"><div><span class="eyebrow">NEW ENTRY</span><h2>How are you today?</h2></div><div class="form-row"><label class="weight-field"><input type="number" min="20" max="500" step="0.1" placeholder="00.0" [ngModel]="weight()" (ngModelChange)="weight.set($event)"><span>kg</span></label><label class="date-field"><span>Date</span><input type="date" [ngModel]="date()" (ngModelChange)="date.set($event)"></label></div><input class="note" maxlength="100" placeholder="A note, if you like…" [ngModel]="note()" (ngModelChange)="note.set($event)"><button class="save" [disabled]="!weight() || isSaving()" (click)="save()">{{ isSaving() ? 'Saving…' : 'Save check-in' }} <span>→</span></button></article><article class="chart card"><div class="chart-heading"><div><span class="eyebrow">RECENT TREND</span><h2>Your rhythm</h2></div><span class="entries-count">{{ entries().length }} entries</span></div>@if (chartPoints()) { <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="Weight trend chart"><polyline [attr.points]="chartPoints()"></polyline></svg> } @else { <div class="chart-empty">Add at least two entries to see your trend.</div> }</article></section>
-<section class="history"><div class="history-heading"><div><span class="eyebrow">YOUR HISTORY</span><h2>Every check-in counts.</h2></div><span>{{ entries().length }} total</span></div>@if (entries().length) { <div class="entries">@for (entry of entries(); track entry.id) { <article class="entry"><div class="date"><b>{{ formatDate(entry.date) }}</b><span>{{ entry.note || 'No note' }}</span></div><strong>{{ entry.weight | number:'1.0-1' }} <small>kg</small></strong><button (click)="remove(entry)" aria-label="Delete entry">×</button></article> }</div> } @else { <div class="empty">No entries yet. Your journey begins with one small check-in.</div> }</section><footer><span>◉</span> Your data lives only on this device.</footer></main>
+<main>
+  <header>
+    <div class="brand"><span class="mark">w</span><span>weightwise</span></div>
+    @if (installPrompt()) {
+      <button class="install" (click)="install()">Install app</button>
+    }
+  </header>
+  <section class="dashboard">
+    <article class="summary">
+      <span class="label">CURRENT WEIGHT</span>
+      @if (latest(); as entry) {
+        <div class="big-number">{{ entry.weight | number: '1.0-1' }} <small>kg</small></div>
+        <p>Last updated {{ formatDate(entry.date).toLowerCase() }}</p>
+      } @else {
+        <div class="big-number muted">— <small>kg</small></div>
+        <p>Your first check-in starts here.</p>
+      }
+    </article>
+    <article class="metric">
+      <span class="label">LAST CHANGE</span>
+      @if (change() !== null) {
+        <strong [class.down]="change()! < 0" [class.up]="change()! > 0"
+          >{{ change()! > 0 ? '+' : '' }}{{ change() | number: '1.0-1' }} kg</strong
+        >
+      } @else {
+        <strong>—</strong>
+      }
+      <p>since previous entry</p>
+    </article>
+    <article class="metric">
+      <span class="label">YOUR RANGE</span>
+      @if (range(); as values) {
+        <strong>{{ values.low | number: '1.0-1' }}–{{ values.high | number: '1.0-1' }}</strong>
+      } @else {
+        <strong>—</strong>
+      }
+      <p>all recorded weights</p>
+    </article>
+  </section>
+  <section class="content-grid">
+    <article class="checkin card">
+      <div>
+        <span class="eyebrow">NEW ENTRY</span>
+        <h2>How are you today?</h2>
+      </div>
+      <div class="form-row">
+        <label class="weight-field"
+          ><input
+            type="number"
+            min="20"
+            max="500"
+            step="0.1"
+            placeholder="00.0"
+            [ngModel]="weight()"
+            (ngModelChange)="weight.set($event)"
+          /><span>kg</span></label
+        ><label class="date-field"
+          ><span>Date</span
+          ><input type="date" [ngModel]="date()" (ngModelChange)="date.set($event)"
+        /></label>
+      </div>
+      <input
+        class="note"
+        maxlength="100"
+        placeholder="A note, if you like…"
+        [ngModel]="note()"
+        (ngModelChange)="note.set($event)"
+      /><button class="save" [disabled]="!weight() || isSaving()" (click)="save()">
+        {{ isSaving() ? 'Saving…' : 'Save check-in' }} <span>→</span>
+      </button>
+    </article>
+    <article class="chart card">
+      <div class="chart-heading">
+        <div>
+          <span class="eyebrow">RECENT TREND</span>
+          <h2>Your rhythm</h2>
+        </div>
+        <span class="entries-count">{{ entries().length }} entries</span>
+      </div>
+      @if (chartPoints()) {
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="Weight trend chart">
+          <polyline [attr.points]="chartPoints()"></polyline>
+        </svg>
+      } @else {
+        <div class="chart-empty">Add at least two entries to see your trend.</div>
+      }
+    </article>
+  </section>
+  <section class="history">
+    <div class="history-heading">
+      <div>
+        <span class="eyebrow">YOUR HISTORY</span>
+        <h2>Every check-in counts.</h2>
+      </div>
+      <span>{{ entries().length }} total</span>
+    </div>
+    @if (entries().length) {
+      <div class="entries">
+        @for (entry of entries(); track entry.id) {
+          <article class="entry">
+            <div class="date">
+              <b>{{ formatDate(entry.date) }}</b
+              ><span>{{ entry.note || 'No note' }}</span>
+            </div>
+            <strong>{{ entry.weight | number: '1.0-1' }} <small>kg</small></strong
+            ><button (click)="remove(entry)" aria-label="Delete entry">×</button>
+          </article>
+        }
+      </div>
+    } @else {
+      <div class="empty">No entries yet. Your journey begins with one small check-in.</div>
+    }
+  </section>
+  <footer><span>◉</span> Your data lives only on this device.</footer>
+</main>
