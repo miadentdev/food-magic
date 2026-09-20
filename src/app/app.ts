@@ -10,6 +10,11 @@ interface WeightEntry {
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
+interface ChangeLogRelease {
+  version: string;
+  date: string;
+  changes: string[];
+}
 type TrendRange = '1m' | '6m' | '1y' | '5y' | 'all';
 @Component({
   selector: 'app-root',
@@ -25,7 +30,28 @@ export class App implements OnInit {
   readonly entryDate = signal(this.today());
   readonly entryNote = signal('');
   readonly isSaving = signal(false);
+  readonly isChangeLogOpen = signal(false);
   readonly installPrompt = signal<BeforeInstallPromptEvent | null>(null);
+  readonly changeLog: ChangeLogRelease[] = [
+    {
+      version: '1.0.2',
+      date: 'September 20, 2026',
+      changes: ['Added an in-app change log viewer.'],
+    },
+    {
+      version: '1.0.1',
+      date: 'September 20, 2026',
+      changes: [
+        'Moved the import and export controls above the weight-entry history.',
+        'Made import and export button typography consistent.',
+      ],
+    },
+    {
+      version: '1.0.0',
+      date: 'Initial release',
+      changes: ['Introduced local weight tracking, trend charts, JSON backup import/export, and offline support.'],
+    },
+  ];
   readonly trendRanges: { value: TrendRange; label: string }[] = [
     { value: '1m', label: '1 month' },
     { value: '6m', label: '6 months' },
@@ -69,6 +95,8 @@ export class App implements OnInit {
       .join(' ');
   });
   selectTrendRange(trendRange: TrendRange) { this.selectedTrendRange.set(trendRange); }
+  openChangeLog() { this.isChangeLogOpen.set(true); }
+  closeChangeLog() { this.isChangeLogOpen.set(false); }
   ngOnInit() {
     if ('indexedDB' in window) this.openDatabase();
     window.addEventListener('beforeinstallprompt', (installEvent) => {

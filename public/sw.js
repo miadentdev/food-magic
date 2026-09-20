@@ -1,4 +1,4 @@
-const cacheName = 'ontrack-v1.0.0';
+const cacheName = 'ontrack-v1.0.2';
 const applicationShellFiles = ['/', '/index.html', '/manifest.webmanifest', '/icon.svg'];
 
 self.addEventListener('install', (installEvent) => {

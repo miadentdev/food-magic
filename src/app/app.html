@@ -91,6 +91,43 @@
       }
     </article>
   </section>
+  <div class="data-tools">
+    <div>
+      <b>Keep a copy of your progress</b
+      ><span>Export a JSON backup or import one from OnTrack.</span>
+    </div>
+    <div>
+      <button class="data-button" (click)="exportData()">Export data</button
+      ><label class="data-button import"
+        >Import data<input
+          type="file"
+          accept="application/json,.json"
+          (change)="importData($event)"
+      /></label
+      ><button class="data-button" (click)="openChangeLog()">Change Log</button>
+    </div>
+  </div>
+  @if (isChangeLogOpen()) {
+    <div class="change-log-backdrop" (click)="closeChangeLog()">
+      <section class="change-log-dialog" role="dialog" aria-modal="true" aria-labelledby="change-log-title" (click)="$event.stopPropagation()">
+        <div class="change-log-heading">
+          <h2 id="change-log-title">Change Log</h2>
+          <button type="button" aria-label="Close change log" (click)="closeChangeLog()">×</button>
+        </div>
+        @for (release of changeLog; track release.version) {
+          <article class="change-log-release">
+            <h3>v{{ release.version }}</h3>
+            <span>{{ release.date }}</span>
+            <ul>
+              @for (change of release.changes; track change) {
+                <li>{{ change }}</li>
+              }
+            </ul>
+          </article>
+        }
+      </section>
+    </div>
+  }
   <section class="history">
     <div class="history-heading">
       <div>
@@ -116,20 +153,5 @@
       <div class="empty">No entries yet. Your journey begins with one small check-in.</div>
     }
   </section>
-  <div class="data-tools">
-    <div>
-      <b>Keep a copy of your progress</b
-      ><span>Export a JSON backup or import one from OnTrack.</span>
-    </div>
-    <div>
-      <button class="data-button" (click)="exportData()">Export data</button
-      ><label class="data-button import"
-        >Import data<input
-          type="file"
-          accept="application/json,.json"
-          (change)="importData($event)"
-      /></label>
-    </div>
-  </div>
-  <footer><span>◉</span> Your data lives only on this device. · v1.0.0</footer>
+  <footer><span>◉</span> Your data lives only on this device. · v1.0.2</footer>
 </main>
