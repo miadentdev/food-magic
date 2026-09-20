@@ -34,6 +34,11 @@ export class App implements OnInit {
   readonly installPrompt = signal<BeforeInstallPromptEvent | null>(null);
   readonly changeLog: ChangeLogRelease[] = [
     {
+      version: '1.0.3',
+      date: 'September 20, 2026',
+      changes: ['Fixed offline cache updates after new deployments.'],
+    },
+    {
       version: '1.0.2',
       date: 'September 20, 2026',
       changes: ['Added an in-app change log viewer.'],

@@ -2,6 +2,12 @@
 
 All notable changes to OnTrack are documented in this file.
 
+## [1.0.3] - 2026-09-20
+
+### Fixed
+
+- Fixed stale offline cache updates that could prevent the app from loading after deployment.
+
 ## [1.0.2] - 2026-09-20
 
 ### Added

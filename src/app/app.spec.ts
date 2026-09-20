@@ -58,6 +58,6 @@ describe('App', () => {
     fixture.detectChanges();
 
     expect(compiled.querySelector('[role="dialog"]')).toBeTruthy();
-    expect(compiled.querySelector('.change-log-release')?.textContent).toContain('v1.0.2');
+    expect(compiled.querySelector('.change-log-release')?.textContent).toContain('v1.0.3');
   });
 });
